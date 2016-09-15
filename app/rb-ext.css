@@ -1,0 +1,21 @@
+.rb-file-toggler-icon {
+    float: right;
+}
+
+.rb-file-toggler-icon {
+    background-position: -114px -5px;
+    width: 14px;
+    height: 14px;
+}
+
+.rb-file-collapse .rb-file-toggler-icon {
+    background-position: -5px -28px;
+}
+
+.rb-file-collapse tbody {
+    display: none;
+}
+
+.rb-file-collapse .revision-row {
+    display: none;
+}
