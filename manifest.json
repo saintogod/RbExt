@@ -2,6 +2,7 @@
     "manifest_version": 2,
     "name": "ReviewBoard",
     "version": "0.1.0",
+    "description": "This extension is used to add some utilities to Review Board.",
     "permissions": ["storage", "tabs"],
     "content_scripts": [{
         "matches": ["http://demo.reviewboard.org/r/*/diff/*"],

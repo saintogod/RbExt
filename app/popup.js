@@ -4,13 +4,11 @@
     var rbSettings = {};
 
     function settingChanged(event) {
-        var type = this.id;
-        var setting = this.checked;
+        var type = event.target.id;
+        var setting = event.target.checked;
         rbSettings[type] = setting;
-        console.log(type + ': ' + setting);
-        message('haha');
         chrome.storage.sync.set({ "rbt": rbSettings }, function() {
-
+            syncSettings(rbSettings);
         });
     }
 
@@ -24,11 +22,19 @@
 
         function loadConfig() {
             chrome.storage.sync.get('rbt', function(val) {
-                rbSettings = val;
-                console.log(val);
+                rbSettings = val.rbt;
+                syncSettings(rbSettings);
             });
         }
     });
+
+    function syncSettings(rbSettings) {
+        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+            var port = chrome.tabs.connect(tabs[0].id);
+            port.postMessage(rbSettings);
+        });
+    }
+    /*
     chrome.storage.onChanged.addListener(function(changes, namespace) {
         for (var key in changes) {
             if (changes.hasOwnProperty(key)) {
@@ -41,5 +47,5 @@
                     storageChange.newValue);
             }
         }
-    });
+    });*/
 })();

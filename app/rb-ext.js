@@ -48,12 +48,12 @@
 
     function togglerFile(event) {
         event.preventDefault();
-        this.parentNode.parentNode.parentNode.parentNode.classList.toggle('rb-file-collapse');
+        event.target.parentNode.parentNode.parentNode.parentNode.classList.toggle('rb-file-collapse');
         return false;
     }
 
     function hideBinaryFile(fileEle) {
-
+        console.log(fileEle);
     }
 
     function throttle(fn, threshhold, scope) {
@@ -80,31 +80,9 @@
         };
     }
 
-    chrome.storage.onChanged.addListener(function(changes, namespace) {
-        for (var key in changes) {
-            if (changes.hasOwnProperty(key)) {
-                var storageChange = changes[key];
-                console.log('Storage key "%s" in namespace "%s" changed. ' +
-                    'Old value was "%s", new value is "%s".',
-                    key,
-                    namespace,
-                    storageChange.oldValue,
-                    storageChange.newValue);
-            }
+    chrome.storage.onChanged.addListener(function(changes) {
+        if(changes.rbt){
+            console.log(changes.rbt.newValue);
         }
-    });
-
-    var port = chrome.runtime.connect();
-    window.addEventListener('message', function(event){
-        if(event.source !== window){
-            return;
-        }
-        if(event.data.type && (event.data.type === 'FROM_PAGE')) {
-            console.log("Content script received: " + event.data.text);
-            port.postMessage(event.data.text);
-        }
-    }, false);
-    port.onMessage(function(){
-        console.log(arguments);
     });
 })();

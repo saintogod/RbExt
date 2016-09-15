@@ -5,23 +5,30 @@
     <title>Popup</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="rb-ext.css">
     <style>
-        body {
-            min-width: 200px;
-            font-size: .8em;
-        }
-        
-        .form-group {
-            display: flex;
-        }
+    body {
+        min-width: 200px;
+        font-size: .8em;
+    }
+
+    .form-group {
+        display: flex;
+    }
+
+    .results {
+        text-align: right;
+        min-width: 6em;
+        color: black;
+    }
     </style>
 </head>
 
 <body>
     <form>
         <div class="form-group">
-            <input type="checkbox" name="HideBinary" id="HideBinary">
-            <label for="HideBinary">Hide binary files</label>
+            <input type="checkbox" name="HideBinary" id="HideBinary" class="tgl tgl-light">
+            <label for="HideBinary" class="tgl-btn"><span>Hide binary files</span></label>
         </div>
     </form>
     <script src="popup.js"></script>
