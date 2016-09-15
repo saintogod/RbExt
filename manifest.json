@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "ReviewBoard",
     "version": "0.1.0",
-    "permissions": ["storage", "http://demo.reviewboard.org/r/*/diff/*"],
+    "permissions": ["storage", "tabs"],
     "content_scripts": [{
         "matches": ["http://demo.reviewboard.org/r/*/diff/*"],
         "js": ["app/rb-ext.js"],

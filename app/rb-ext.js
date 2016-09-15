@@ -1,4 +1,6 @@
+/*global chrome*/
 (function() {
+    'use strict';
     onExtLoad(onLoad);
 
     function onExtLoad(onLoadFunc) {
@@ -17,8 +19,9 @@
         var files = document.getElementsByClassName('filename-row');
         Array.prototype.forEach.call(files, function(fileEle) {
             var table = fileEle.parentNode.parentNode;
-            if (Array.prototype.indexOf.call(table.classList, 'rb-extension-loaded') !== -1)
+            if (Array.prototype.indexOf.call(table.classList, 'rb-extension-loaded') !== -1){
                 return false;
+            }
             addTogglerIconToRow(fileEle);
             table.className += ' rb-extension-loaded';
             hideBinaryFile(fileEle);
@@ -29,11 +32,13 @@
         var th = fileEle.children[0];
         for (var index = 0; index < th.children.length; index++) {
             var ele = th.children[index];
-            if (Array.prototype.indexOf.call(ele.classList, 'rb-file-toggler-icon') !== -1)
+            if (Array.prototype.indexOf.call(ele.classList, 'rb-file-toggler-icon') !== -1){
                 return false;
+            }
         }
-        if (th.children.length > 2)
+        if (th.children.length > 2){
             return false;
+        }
         var toggler = document.createElement('a');
         toggler.className = "rb-icon rb-file-toggler-icon";
         toggler.href = '#';
@@ -52,13 +57,14 @@
     }
 
     function throttle(fn, threshhold, scope) {
-        threshhold || (threshhold = 250);
+        threshhold = threshhold || 250;
         var last,
             deferTimer,
             running = false;
         return function() {
-            if (running) return;
-
+            if (running) {
+                return;
+            }
             running = true;
             var context = scope || this;
             var now = +new Date(),
@@ -73,4 +79,32 @@
             }, threshhold);
         };
     }
+
+    chrome.storage.onChanged.addListener(function(changes, namespace) {
+        for (var key in changes) {
+            if (changes.hasOwnProperty(key)) {
+                var storageChange = changes[key];
+                console.log('Storage key "%s" in namespace "%s" changed. ' +
+                    'Old value was "%s", new value is "%s".',
+                    key,
+                    namespace,
+                    storageChange.oldValue,
+                    storageChange.newValue);
+            }
+        }
+    });
+
+    var port = chrome.runtime.connect();
+    window.addEventListener('message', function(event){
+        if(event.source !== window){
+            return;
+        }
+        if(event.data.type && (event.data.type === 'FROM_PAGE')) {
+            console.log("Content script received: " + event.data.text);
+            port.postMessage(event.data.text);
+        }
+    }, false);
+    port.onMessage(function(){
+        console.log(arguments);
+    });
 })();

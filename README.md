@@ -1,2 +1,2 @@
-# RbExt
-A litter extension for Reviewboard.
+# Review Board Extension
+A Chrome extension for Reviewboard site.

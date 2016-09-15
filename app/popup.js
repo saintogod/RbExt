@@ -1,34 +1,45 @@
-var incognito;
-var url;
+/*global chrome*/
+(function() {
+    'use strict';
+    var rbSettings = {};
 
-function settingChanged(event) {
-    var type = this.id;
-    var setting = this.checked;
-    console.log(type + ': ' + setting);
-}
+    function settingChanged(event) {
+        var type = this.id;
+        var setting = this.checked;
+        rbSettings[type] = setting;
+        console.log(type + ': ' + setting);
+        message('haha');
+        chrome.storage.sync.set({ "rbt": rbSettings }, function() {
 
-document.addEventListener('DOMContentLoaded', function() {
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        var current = tabs[0];
-        incognito = current.incognito;
-        url = current.url;
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
         loadConfig();
+
+        var selects = document.querySelectorAll('input');
+        for (var i = 0; i < selects.length; i++) {
+            selects[i].addEventListener('change', settingChanged);
+        }
+
+        function loadConfig() {
+            chrome.storage.sync.get('rbt', function(val) {
+                rbSettings = val;
+                console.log(val);
+            });
+        }
     });
-
-    var selects = document.querySelectorAll('input');
-    for (var i = 0; i < selects.length; i++) {
-        selects[i].addEventListener('change', settingChanged);
-    }
-
-    function loadConfig() {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) {
-                var data = JSON.parse(xhr.response);
-                document.getElementById('HideBinary').checked = data.HideBinary;
+    chrome.storage.onChanged.addListener(function(changes, namespace) {
+        for (var key in changes) {
+            if (changes.hasOwnProperty(key)) {
+                var storageChange = changes[key];
+                console.log('Storage key "%s" in namespace "%s" changed. ' +
+                    'Old value was "%s", new value is "%s".',
+                    key,
+                    namespace,
+                    storageChange.oldValue,
+                    storageChange.newValue);
             }
-        };
-        xhr.open("GET", chrome.extension.getURL('/config.json'), true);
-        xhr.send();
-    }
-});
+        }
+    });
+})();
