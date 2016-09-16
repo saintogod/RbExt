@@ -318,3 +318,9 @@
 .rb-file-collapse .revision-row {
     display: none;
 }
+.diff-binary-container {
+    display: none;
+}
+.diff-binary-container.show {
+    display: initial;
+}

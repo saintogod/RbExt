@@ -5,7 +5,7 @@
     "description": "This extension is used to add some utilities to Review Board.",
     "permissions": ["storage", "tabs"],
     "content_scripts": [{
-        "matches": ["http://demo.reviewboard.org/r/*/diff/*"],
+        "matches": ["http://demo.reviewboard.org/r/*/diff/*", "https://v-sh-review/ReviewBoard/r/*/diff/*"],
         "js": ["app/rb-ext.js"],
         "css": ["app/rb-ext.css"],
         "run_at": "document_start"
